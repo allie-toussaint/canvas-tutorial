@@ -5,22 +5,55 @@
     <meta charset="utf-8"/>
     <title>Canvas tutorial</title>
     <style type="text/css">
-      canvas { border: 1px solid black; }
+      canvas { border: 1px dotted black; }
     </style>
   </head>
   <body onload="draw();">
-    <canvas id="canvas" width="150" height="150"></canvas>
+    <canvas id="canvas" width="500" height="500"></canvas>
   </body>
 </html>
 <script type="text/javascript">
-    function draw() {
-  var canvas = document.getElementById('canvas');
-  if (canvas.getContext) {
-    var ctx = canvas.getContext('2d');
+let secs = 0;
+  function draw() {
+    requestAnimationFrame(draw)
+    var canvas = document.getElementById('canvas');
+    if (canvas.getContext) {
+      var ctx = canvas.getContext('2d');
 
-    ctx.fillStyle = 'red';
-    ctx.strokeStyle = 'red';
-    ctx.fillRect(25, 25, 100, 100);
+      ctx.beginPath();
+      ctx.arc(250,250,100,0,Math.PI * 2);
+      ctx.fill();
+
+      let length = 75;
+      let startX = 250;
+      let startY = 250;
+      let angle  = angleFromSeconds(secs);
+
+      let endX = xfromLengthAngleAndPoint (length,angle,startX);
+      let endY = yfromLengthAngleAndPoint (length,angle,startY);
+
+      ctx.beginPath();
+      ctx.moveTo(startX,startY);
+      ctx.lineTo(endX,endY);
+      ctx.strokeStyle='white';
+      ctx.stroke();
     }
   }
+  function angleFromSeconds(seconds){
+    let degrees = seconds * 6;
+    return Math.PI/180 * degrees - Math.PI/2;
+  }
+  function xfromLengthAngleAndPoint(l,th,x){
+    let a = Math.cos(th) * l;
+    return x + a;
+  }
+  function yfromLengthAngleAndPoint(l,th,y){
+    let o = Math.sin(th) * l;
+    return y + o;
+  }
+  function tickTock () {
+    secs = (secs + 1) % 60
+  }
+  setInterval(tickTock,1000);
+  draw()
 </script>
